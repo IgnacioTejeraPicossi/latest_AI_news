@@ -42,7 +42,12 @@ Error handling and loading states
 TypeScript for type safety
 
 ## 6.  To use the app:
--Start the development server:
+-Install dependencies from root (node):
+ ```
+  npm install
+   ```
+
+-Start the server (application):
  ```
   npx expo start
    ```
