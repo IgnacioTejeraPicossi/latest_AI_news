@@ -1,4 +1,10 @@
-     Comprehensive AI news app with the following features:
+
+     Comprehensive AI news app with the following features
+
+
+     
+     
+  
 
 1) Latest News Tab
 
