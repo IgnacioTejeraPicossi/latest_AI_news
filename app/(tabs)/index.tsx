@@ -1,6 +1,7 @@
-import { View, Text, StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, RefreshControl, TouchableOpacity } from 'react-native';
 import { useCallback, useEffect, useState } from 'react';
 import { useAINews } from '@/hooks/useAINews';
+import { RefreshCw } from 'lucide-react-native';
 
 export default function LatestScreen() {
   const { getLatestNews, news, loading } = useAINews();
@@ -17,25 +18,45 @@ export default function LatestScreen() {
   }, [getLatestNews]);
 
   return (
-    <ScrollView
-      style={styles.container}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }>
-      <View style={styles.content}>
-        {loading ? (
-          <Text style={styles.loadingText}>Loading latest AI news...</Text>
-        ) : (
-          news.map((item, index) => (
-            <View key={index} style={styles.newsCard}>
-              <Text style={styles.newsTitle}>{item.title}</Text>
-              <Text style={styles.newsDescription}>{item.description}</Text>
-              <Text style={styles.newsDate}>{item.date}</Text>
-            </View>
-          ))
-        )}
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Latest AI News</Text>
+        <TouchableOpacity
+          style={styles.refreshButton}
+          onPress={onRefresh}
+          disabled={loading || refreshing}
+        >
+          <RefreshCw 
+            size={20} 
+            color="#007AFF"
+            style={[
+              styles.refreshIcon,
+              (loading || refreshing) && styles.refreshing
+            ]} 
+          />
+        </TouchableOpacity>
       </View>
-    </ScrollView>
+
+      <ScrollView
+        style={styles.content}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
+        <View style={styles.newsContainer}>
+          {loading && !refreshing ? (
+            <Text style={styles.loadingText}>Loading latest AI news...</Text>
+          ) : (
+            news.map((item, index) => (
+              <View key={index} style={styles.newsCard}>
+                <Text style={styles.newsTitle}>{item.title}</Text>
+                <Text style={styles.newsDescription}>{item.description}</Text>
+                <Text style={styles.newsDate}>{item.date}</Text>
+              </View>
+            ))
+          )}
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -44,7 +65,39 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f8f9fa',
   },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#ffffff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e5e5',
+  },
+  headerTitle: {
+    fontFamily: 'Inter_700Bold',
+    fontSize: 24,
+    color: '#1c1c1e',
+  },
+  refreshButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    backgroundColor: '#f8f9fa',
+  },
+  refreshIcon: {
+    opacity: 1,
+  },
+  refreshing: {
+    opacity: 0.5,
+    transform: [{ rotate: '45deg' }],
+  },
   content: {
+    flex: 1,
+  },
+  newsContainer: {
     padding: 16,
   },
   loadingText: {
